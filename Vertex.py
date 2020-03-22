@@ -20,3 +20,10 @@ class Vertex:
     def Display(self):
         """returns a string to display the coordinates of this vertex"""
         return "({} , {})".format(self.x, self.y)
+
+    def Is_Equal(self, v):
+        if v.x is self.x:
+            if v.y is self.y:
+                return True
+        
+        return False

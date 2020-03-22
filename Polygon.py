@@ -22,37 +22,45 @@ class Polygon:
         super().__init__()
 
     def Add_Vertex(self, v):
-        print("\n--Add_Vertex: {}".format(v.Display()))
+        """"Adds a vertex at the end of this polygon"""
+        
+        #print("\n--Add_Vertex: {}".format(v.Display()))
         if self.Empty():
             self.first_node = Node.Node(v)
-            print("Assigned first Node: {}".format(self.first_node.vertex.Display()))
+            #print("Assigned first Node: {}".format(self.first_node.vertex.Display()))
 
         else:
             cur = self.Get_Last_Node()
+            
             if cur is not None:
-                print("Last Node: {}".format(cur.vertex.Display()))
+                #print("Last Node: {}".format(cur.vertex.Display()))
+                
                 cur.vertex.Display()
                 cur.Add_Node(Node.Node(v))
-                print("Added vertex: {}".format(v.Display()))
-
+                
+                #print("Added vertex: {}".format(v.Display()))
+            else:
+                #if there is a cycle, just return
+                return
+                
         self.count = self.count + 1
 
 
     def Get_Last_Node(self):
-        print("\n--Get_Last_Node:")
+        #print("\n--Get_Last_Node:")
         if self.Empty():
             return None
 
         cur = self.first_node
         while cur.next_node is not None:
-            print("cur = {}".format(cur.vertex.Display()))
+            #print("cur = {}".format(cur.vertex.Display()))
             if cur is self.first_node and cur.prev_node is not None:
-                print("There is no last node")
+                #print("There is no last node")
                 return None
             
             cur = cur.next_node
         
-        print("returning {}\n".format(cur.vertex.Display()))
+        #print("returning {}\n".format(cur.vertex.Display()))
         return cur
 
     def Empty(self):
@@ -84,7 +92,3 @@ class Polygon:
             cur = cur.next_node
 
         print("Vertex Count: {}".format(self.count))
-
-
-
-        
