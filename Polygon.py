@@ -9,6 +9,7 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"""
 import Node
 import Vertex
+import numpy as np
 
 class Polygon:
     """
@@ -79,6 +80,28 @@ class Polygon:
         last.next_node = self.first_node
         self.first_node.prev_node = last
 
+    def Collision(self, point):
+        if self.first_node is None:
+            print("This polygon is empty")
+            return
+        
+        next_node = self.first_node.next_node
+        a = np.array([next_node.vertex.x - self.first_node.vertex.x, next_node.vertex.y - self.first_node.vertex.y, 0])
+        b = np.array([point.x - next_node.vertex.x, point.y - next_node.vertex.y, 0])
+        #ERROR here. For some reason this is not working the way it needs to. Might have to write our own cross product function
+        test = np.cross(a,b)
+        if test[2] < 0:
+            return False
+        
+        cur = next_node
+        while cur is not self.first_node:
+            a = np.array([cur.next_node.vertex.x - cur.vertex.x, cur.next_node.vertex.y - cur.vertex.y, 0])
+            b = np.array([point.x - cur.next_node.vertex.x, point.y - cur.next_node.vertex.y, 0])
+            test = np.cross(a,b)
+            if test[2] < 0:
+                return False
+
+        return True
 
     def Display(self):
         if self.Empty():

@@ -79,6 +79,8 @@ class TestPolygon:
         if self.debug:
             p.Display()
         
+        self.TestCrossProduct(p)
+
         self.Test_Results()
         self.Clear_Lists()
 
@@ -101,8 +103,43 @@ class TestPolygon:
         else:
             self.Update_Lists(False, "FAIL::There are {} vertices on the polygon, which should be {}".format(p.count, len(contents)))
 
+        self.TestCrossProduct(p)
+
         self.Test_Results()
         self.Clear_Lists()
+
+    def TestCrossProduct(self, polygon):
+        #This test should pass
+        v1 = polygon.first_node.vertex
+        v2 = polygon.first_node.next_node.next_node.vertex
+
+        mid_x = (v1.x + v2.x) / 2
+        mid_y = (v1.y + v2.y) / 2
+
+        midpoint = Vertex.Vertex(mid_x, mid_y)
+
+        test = polygon.Collision(midpoint)
+        
+        if test:
+            self.Update_Lists(True, "PASS::" + midpoint.Display() + " Collides with the polygon, that's good")
+        else:
+            self.Update_List(False, "FAIL::" + midpoint.Display() + " Does not collide with the polygon, that's bad")
+
+        #This test should fail
+        trajectory_x = -1 * (v2.x - v1.x)
+        trajectory_y = -1 * (v2.y - v1.y)
+
+        v3 = Vertex.Vertex(v1.x + trajectory_x, v1.y + trajectory_y)
+
+        test = polygon.Collision(v3)
+
+        if test:
+            self.Update_Lists(False, "FAIL::" + v3.Display() +" Collides with the polygon, that's bad")
+        else:
+            self.Update_Lists(True, "PASS::" + v3.Display() + " Does not collide with the polygon, that's good")
+
+        
+
 
     def Test_Results(self):
         num = 0
