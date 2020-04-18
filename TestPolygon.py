@@ -96,6 +96,7 @@ class TestPolygon:
             v = Vertex.Vertex(x,y)
             p.Add_Vertex(v)
 
+        p.Connect()
         p.Display()
 
         if len(contents) == p.count:
@@ -109,7 +110,7 @@ class TestPolygon:
         self.Clear_Lists()
 
     def TestCrossProduct(self, polygon):
-        #This test should pass
+        #This test should pass (point inside the polygon)
         v1 = polygon.first_node.vertex
         v2 = polygon.first_node.next_node.next_node.vertex
 
@@ -125,7 +126,7 @@ class TestPolygon:
         else:
             self.Update_List(False, "FAIL::" + midpoint.Display() + " Does not collide with the polygon, that's bad")
 
-        #This test should fail
+        #This test should fail (point outside of the polygon)
         trajectory_x = -1 * (v2.x - v1.x)
         trajectory_y = -1 * (v2.y - v1.y)
 
@@ -138,8 +139,15 @@ class TestPolygon:
         else:
             self.Update_Lists(True, "PASS::" + v3.Display() + " Does not collide with the polygon, that's good")
 
-        
+        #This test should pass (Point on the edge of the polygon)
+        v3 = polygon.first_node.vertex
 
+        test = polygon.Collision(v3)
+
+        if test:
+            self.Update_Lists(True, "PASS::" + v3.Display() + " Collides with the polygon, that's good")
+        else:
+            self.Update_Lists(False, "FAIL::" + v3.Display() + " Does not collide with the polygon, that's bad")
 
     def Test_Results(self):
         num = 0

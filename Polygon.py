@@ -9,7 +9,6 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"""
 import Node
 import Vertex
-import numpy as np
 
 class Polygon:
     """
@@ -81,27 +80,59 @@ class Polygon:
         self.first_node.prev_node = last
 
     def Collision(self, point):
+        #print("Polygon::Collision::")
         if self.first_node is None:
             print("This polygon is empty")
             return
         
         next_node = self.first_node.next_node
-        a = np.array([next_node.vertex.x - self.first_node.vertex.x, next_node.vertex.y - self.first_node.vertex.y, 0])
-        b = np.array([point.x - next_node.vertex.x, point.y - next_node.vertex.y, 0])
-        #ERROR here. For some reason this is not working the way it needs to. Might have to write our own cross product function
-        test = np.cross(a,b)
-        if test[2] < 0:
+        #print("\tfirst_node = " + self.first_node.vertex.Display())
+        #print("\tnext_node = " + next_node.vertex.Display())
+
+        tempx = next_node.vertex.x - self.first_node.vertex.x
+        tempy = next_node.vertex.y - self.first_node.vertex.y
+
+        a = Vertex.Vertex(tempx, tempy)
+        #print("\ta = " + a.Display())
+
+        tempx = point.x - next_node.vertex.x
+        tempy = point.y - next_node.vertex.y
+
+        b = Vertex.Vertex(tempx, tempy)
+        #print("\tb = " + b.Display())
+
+        test = self.Cross(a,b)
+        if test < 0:
+            #print("\t" + point.Display() + " does not collide")
             return False
         
         cur = next_node
         while cur is not self.first_node:
-            a = np.array([cur.next_node.vertex.x - cur.vertex.x, cur.next_node.vertex.y - cur.vertex.y, 0])
-            b = np.array([point.x - cur.next_node.vertex.x, point.y - cur.next_node.vertex.y, 0])
-            test = np.cross(a,b)
-            if test[2] < 0:
+            if(cur.next_node is None):
+                print("Something is wrong, next node is null")
+            next_node = cur.next_node
+
+            tempx = next_node.vertex.x - cur.vertex.x
+            tempy = next_node.vertex.y - cur.vertex.y
+
+            a = Vertex.Vertex(tempx, tempy)
+        
+            tempx = point.x - next_node.vertex.x
+            tempy = point.y - next_node.vertex.y
+
+            b = Vertex.Vertex(tempx, tempy)
+            #print("\tTesting " + a.Display() + " x " + b.Display())
+            test = self.Cross(a,b)
+            if test < 0:
+                #print("\t" + point.Display() + " does not collide")
                 return False
+            cur = next_node
 
         return True
+
+    def Cross(self, a, b):
+        #print("Polygon::Cross")
+        return (a.x * b.y) - (a.y * b.x)
 
     def Display(self):
         if self.Empty():
