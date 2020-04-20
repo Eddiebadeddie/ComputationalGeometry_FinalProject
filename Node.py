@@ -17,6 +17,7 @@ class Node:
     vertex = None
     next_node = None
     prev_node = None
+    weight = 0
 
     def __init__(self, v):
         """Constructor that takes a vertex as a parameter and sets it to this
