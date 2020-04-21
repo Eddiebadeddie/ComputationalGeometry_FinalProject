@@ -85,20 +85,13 @@ class TestPolygon:
         self.Clear_Lists()
 
     def Test2(self, file_path):
-        file = open(file_path, "r")
-
         p = Polygon.Polygon()
+        p.ReadInFromList(file_path)
         
+        file = open(file_path, "r")
         contents = file.readlines()
-        for i in range(len(contents)):
-            x, y = map(int, contents[i].strip('()\n\s').split(','))
-
-            v = Vertex.Vertex(x,y)
-            p.Add_Vertex(v)
-
-        p.Connect()
-        p.Display()
-
+        file.close()
+        
         if len(contents) == p.count:
             self.Update_Lists(True, "PASS::There are {} vertices on the polygon, which is right".format(p.count))
         else:

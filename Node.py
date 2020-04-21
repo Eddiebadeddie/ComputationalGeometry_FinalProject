@@ -18,11 +18,15 @@ class Node:
     next_node = None
     prev_node = None
     weight = 0
+    x = 0
+    y = 0
 
     def __init__(self, v):
         """Constructor that takes a vertex as a parameter and sets it to this
            node's vertex. The next and previous nodes are still null"""
         self.vertex = v
+        self.x = v.x
+        self.y = v.y
 
     def Add_Node(self, n):
         """Links the new node to this node"""

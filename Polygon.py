@@ -45,6 +45,19 @@ class Polygon:
                 
         self.count = self.count + 1
 
+    def ReadInFromList(self, path):
+        file = open(path, "r")
+        
+        contents = file.readlines()
+        for i in range(len(contents)):
+            x, y = map(int, contents[i].strip('()\n\s').split(','))
+
+            v = Vertex.Vertex(x,y)
+            self.Add_Vertex(v)
+
+        self.Connect()
+        self.Display()
+        file.close()
 
     def Get_Last_Node(self):
         #print("\n--Get_Last_Node:")
