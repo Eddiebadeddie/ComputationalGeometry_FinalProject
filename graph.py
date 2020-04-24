@@ -56,10 +56,11 @@ class Graph:
 
     #TODO: Wavefront Expansion
     def WavefrontExpansion(self, start):  
-        #starting point is 1
-        self.graph[start.y][start.x].weight = 1
+        #starting point weight is 1
+        self.graph[start.x][start.y].weight = 1
         q = queue.Queue()
-        q.put(start)
+        startNode = Node.Node(start,self.WeightAt(start.y,start.x))
+        q.put(startNode)
         while not q.empty():
             #while q is not empty dequeue first point
             curr = q.get()
@@ -69,19 +70,23 @@ class Graph:
                     #if point is in bounds then this point is new curr
                     if(curr.y + i < self.maxY and curr.y + i >= 0 and curr.x + j < self.maxX  and curr.x + j >= 0):
 
-                        print("\t\tInspecting ({},{}) = {}".format(curr.y + i, curr.x + j, self.WeightAt(curr.y + i, curr.x + j)))
-                       
-                        #curr = self.graph[curr.y + i][curr.x + j]
+                        #print("\t\tInspecting ({},{}) = {}".format(curr.y + i, curr.x + j, self.WeightAt(curr.y + i, curr.x + j)))
+                        #self.Display()
                         #if point is not colliding w obstacle and not already found then add to q and inc weight
                         if self.WeightAt(curr.y + i, curr.x + j) == 0:
-                            self.graph[curr.y + i][curr.x + j].weight = self.WeightAt(curr.y, curr.x) + 1
-                            q.put(self.graph[curr.y + i][curr.x + j].vertex)
-                            print("Added ({}, {}) = {} to the q".format(curr.y + i,curr.x + j, self.WeightAt(curr.y + i, curr.x + j)))
+                            self.graph[curr.x + j][curr.y + i].weight = self.WeightAt(curr.y, curr.x) + 1
+                            #print("weight of prev point = {}".format(self.WeightAt(curr.y, curr.x)))
+                            #print("weight of curr point = {}".format(self.WeightAt(curr.y + i, curr.x + j)))
+                            currVert = Vertex.Vertex(curr.x + j, curr.y + i)
+                            currNode = Node.Node(currVert, self.WeightAt(curr.y + i, curr.x + j))
+                            q.put(currNode)
+                            #print("Added ({}, {}) = {} to the q".format(currNode.y, currNode.x, currNode.weight))
+                            
 
-            for q_item in q.queue:
-                print (q_item.Display())
+            #for q_item in q.queue:
+                #print (q_item.Display())
         
-        exit()
+        
 
     #"""
     #TODO: Djikstra's Algo
@@ -89,9 +94,13 @@ class Graph:
         path = [end]
 
         cur = end
-        min_weight = self.WeightAt(end.y, end.x)
-        min_x = end.x
-        min_y = end.y
+        if end.x >= 0 and end.x < self.maxX and end.y >= 0 and end.y < self.maxY:
+            min_weight = self.WeightAt(end.y, end.x)
+            min_x = end.x
+            min_y = end.y
+        else:
+            raise InputError("end point out of bounds")
+            return 0
         
         for x in self.obstacles:
             if x.Collision(start):
@@ -128,15 +137,20 @@ class Graph:
     #"""  
 
     def WeightAt(self, y, x):
-        return self.graph[y][x].weight
+        return self.graph[x][y].weight
 
     def VertexAt(self, y, x):
-        return self.graph[y][x].vertex
+        return self.graph[x][y].vertex
 
 
     def Display(self):
-        for y in range(self.maxY):
+        print("xx", end= " ")
+        for i in range(self.maxX):
+            print("{}".format(i).zfill(2), end = " ")
+        print()
+        for y in range(0,self.maxY):
+            print("{}".format(y).zfill(2), end = " ")
             for x in range(self.maxX):
-                print("{}".format(self.graph[y][x].weight), end = " ")
+                print("{}".format(self.graph[x][y].weight).zfill(2), end = " ")
             print()
         
